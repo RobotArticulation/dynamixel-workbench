@@ -22,7 +22,7 @@ endif()
 # Find and load build settings from external packages
 ################################################################################
 find_package(ament_cmake REQUIRED)
-find_package(dynamixel_sdk REQUIRED)
+find_package(mercury_sdk REQUIRED)
 find_package(rclcpp REQUIRED)
 
 ################################################################################
@@ -37,7 +37,7 @@ include_directories(
 )
 
 set(dependencies_lib
-  "dynamixel_sdk"
+  "mercury_sdk"
   "rclcpp"
 )
 
@@ -72,7 +72,7 @@ install(DIRECTORY include/
 # Macro for ament package
 ################################################################################
 ament_export_include_directories(include)
-ament_export_dependencies(dynamixel_sdk)
+ament_export_dependencies(mercury_sdk)
 ament_export_dependencies(rclcpp)
 ament_export_libraries(${LIB_NAME})
 ament_package()
