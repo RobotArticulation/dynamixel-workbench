@@ -23,26 +23,26 @@
 
 #if defined(__OPENCR__) || defined(__OPENCM904__)
   #include <Arduino.h>
-  #include <DynamixelSDK.h>
+  #include <MercurySDK.h>
 #elif defined(__linux__) || defined(__APPLE__)
   #include "unistd.h"
-  #include "dynamixel_sdk/dynamixel_sdk.h"
+  #include "mercury_sdk/mercury_sdk.h"
 #endif
 
-#define MAX_DXL_SERIES_NUM  5
+#define MAX_MCY_SERIES_NUM  5
 #define MAX_HANDLER_NUM     5
 #define MAX_BULK_PARAMETER  20
 
 typedef struct 
 {
   const ControlItem *control_item; 
-  dynamixel::GroupSyncWrite *groupSyncWrite;    
+  mercury::GroupSyncWrite *groupSyncWrite;    
 } SyncWriteHandler;
 
 typedef struct 
 {
   const ControlItem *control_item;
-  dynamixel::GroupSyncRead  *groupSyncRead;     
+  mercury::GroupSyncRead  *groupSyncRead;     
 } SyncReadHandler;
 
 typedef struct
@@ -63,20 +63,20 @@ typedef struct
 class DynamixelDriver
 {
  private:
-  dynamixel::PortHandler   *portHandler_;
-  dynamixel::PacketHandler *packetHandler_;
+  mercury::PortHandler   *portHandler_;
+  mercury::PacketHandler *packetHandler_;
 
   SyncWriteHandler syncWriteHandler_[MAX_HANDLER_NUM];
   SyncReadHandler  syncReadHandler_[MAX_HANDLER_NUM];
 
-  dynamixel::GroupBulkRead  *groupBulkRead_;  
-  dynamixel::GroupBulkWrite *groupBulkWrite_;
+  // mercury::GroupBulkRead  *groupBulkRead_;  
+  // mercury::GroupBulkWrite *groupBulkWrite_;
   BulkParameter bulk_read_param_[MAX_BULK_PARAMETER];
  
-  DynamixelTool tools_[MAX_DXL_SERIES_NUM];
+  DynamixelTool tools_[MAX_MCY_SERIES_NUM];
 
   uint8_t tools_cnt_;
-  uint8_t sync_write_handler_cnt_;
+  uint8_t sync_write_handler_cnt_;  
   uint8_t sync_read_handler_cnt_;
   uint8_t bulk_read_parameter_cnt_;
 
