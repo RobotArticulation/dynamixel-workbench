@@ -78,6 +78,7 @@ static const char s_Moving_Status[] = "Moving_Status";
 static const char s_Moving_Threshold[] = "Moving_Threshold";
 static const char s_Multi_Turn_Offset[] = "Multi_Turn_Offset";
 static const char s_Operating_Mode[] = "Operating_Mode";
+static const char s_Input_Mode[] = "Input_Mode";
 static const char s_P_gain[] = "P_gain";
 static const char s_Position_D_Gain[] = "Position_D_Gain";
 static const char s_Position_I_Gain[] = "Position_I_Gain";
@@ -368,7 +369,7 @@ static const ControlItem items_MX2[]{
 
 #define COUNT_MX2_ITEMS (sizeof(items_MX2) / sizeof(items_MX2[0]))
 
-static const ModelInfo info_MX2 = {0.229,
+static const ModelInfo info_MX2 = {0.3,
                                   0,
                                   2048,
                                   4096,
@@ -1409,6 +1410,56 @@ static const ModelInfo info_EXTGripper = {0.01,
                                           0, 
                                           1.7631835937};
 
+
+//---------------------------------------------------------
+// Mercury M1 servos
+//---------------------------------------------------------
+static const ControlItem items_MCY[]{
+    {s_Model_Number, 0, sizeof(s_Model_Number) - 1, 2},
+    {s_Firmware_Version, 2, sizeof(s_Firmware_Version) - 1, 1},
+    {s_ID, 3, sizeof(s_ID) - 1, 1},
+    {s_Baud_Rate, 4, sizeof(s_Baud_Rate) - 1, 1},
+    {s_Return_Delay_Time, 5, sizeof(s_Return_Delay_Time) - 1, 1},
+    {s_Operating_Mode, 6, sizeof(s_Operating_Mode) - 1, 1},
+    {s_CW_Angle_Limit, 7, sizeof(s_CW_Angle_Limit) - 1, 2},
+    {s_CCW_Angle_Limit, 9, sizeof(s_CCW_Angle_Limit) - 1, 2},
+    {s_Temperature_Limit, 11, sizeof(s_Temperature_Limit) - 1, 1},
+    {s_Min_Voltage_Limit, 12, sizeof(s_Min_Voltage_Limit) - 1, 1},
+    {s_Max_Voltage_Limit, 13, sizeof(s_Max_Voltage_Limit) - 1, 1},
+    {s_Max_Torque, 14, sizeof(s_Max_Torque) - 1, 2},
+
+    {s_Velocity_Limit, 16, sizeof(s_Velocity_Limit) - 1, 2},
+    {s_Acceleration_Limit, 18, sizeof(s_Acceleration_Limit) - 1, 2},
+    {s_Homing_Offset, 20, sizeof(s_Homing_Offset) - 1, 4},
+    {s_Moving_Speed, 24, sizeof(s_Moving_Speed) - 1, 2},
+
+    {s_Input_Mode, 26, sizeof(s_Input_Mode) - 1, 1},
+
+    {s_Torque_Enable, 48, sizeof(s_Torque_Enable) - 1, 1},
+
+    {s_Goal_Position, 78, sizeof(s_Goal_Position) - 1, 4},
+    {s_Goal_Velocity, 82, sizeof(s_Goal_Velocity) - 1, 2},
+    {s_Goal_Torque, 84, sizeof(s_Goal_Torque) - 1, 2},
+
+    {s_Present_Current, 86, sizeof(s_Present_Current) - 1, 2},
+    {s_Present_Velocity, 88, sizeof(s_Present_Velocity) - 1, 2},
+    {s_Present_Position, 90, sizeof(s_Present_Position) - 1, 4},
+
+    {s_Present_Load, 94, sizeof(s_Present_Load) - 1, 2},
+    {s_Present_Voltage, 96, sizeof(s_Present_Voltage) - 1, 1},
+    {s_Present_Temperature, 97, sizeof(s_Present_Temperature) - 1, 1}};
+
+#define COUNT_MCY_ITEMS (sizeof(items_MCY) / sizeof(items_MCY[0]))
+
+static const ModelInfo info_MCY = {0.3,
+                                  -8192,
+                                  0,
+                                  8192,
+                                  -3.14159265, 
+                                  3.14159265};
+
+
+
 //=========================================================
 // Get Servo control table for the specified servo type
 //=========================================================
@@ -1527,6 +1578,11 @@ const ControlItem *DynamixelItem::getControlTable(uint16_t model_number)
     control_table = items_EXTGripper;
     the_number_of_item = COUNT_EXTGripper_ITEMS;
   }
+  else if (num == MCY_M1)
+  {
+    control_table = items_MCY;
+    the_number_of_item = COUNT_MCY_ITEMS;  }
+
   else
   {
     control_table = NULL;
@@ -1681,6 +1737,10 @@ const ModelInfo *DynamixelItem::getModelInfo(uint16_t model_number)
   else if (num == RH_P12_RN_A)
   {
     info = &info_EXTGripper;
+  }
+  else if (num == MCY_M1)
+  {
+    info = &info_MCY;
   }
   else
   {

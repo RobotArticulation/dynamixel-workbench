@@ -339,25 +339,6 @@ bool DynamixelDriver::ping(uint8_t id, uint16_t *get_model_number, const char **
 
   uint16_t model_number = 0;
 
-  result = setPacketHandler(1.0f, log);
-  if (result == false) return false;
-
-  sdk_error.dxl_comm_result = packetHandler_->ping(portHandler_, id, &model_number, &sdk_error.dxl_error);  
-  if (sdk_error.dxl_comm_result != COMM_SUCCESS)
-  {
-    if (log != NULL)  *log = packetHandler_->getTxRxResult(sdk_error.dxl_comm_result);
-  }
-  else if (sdk_error.dxl_error != 0)
-  {
-    if (log != NULL)  *log = packetHandler_->getRxPacketError(sdk_error.dxl_error);
-  }
-  else
-  {
-    setTool(model_number, id);
-    if (get_model_number != NULL) *get_model_number = model_number;
-    return true;
-  }
-
   result = setPacketHandler(2.0f, log);
   if (result == false) return false;
 
@@ -919,6 +900,7 @@ void DynamixelDriver::getParam(int32_t data, uint8_t *param)
   param[3] = MCY_HIBYTE(MCY_HIWORD(data));
 }
 
+#include <iostream>
 bool DynamixelDriver::addSyncWriteHandler(uint16_t address, uint16_t length, const char **log)
 {
   if (sync_write_handler_cnt_ > (MAX_HANDLER_NUM-1))
@@ -929,10 +911,14 @@ bool DynamixelDriver::addSyncWriteHandler(uint16_t address, uint16_t length, con
 
   syncWriteHandler_[sync_write_handler_cnt_].control_item = NULL;
 
+  std::cout << "************ About to instatiate GroupSyncWrite" << std::endl;
+
   syncWriteHandler_[sync_write_handler_cnt_].groupSyncWrite = new mercury::GroupSyncWrite(portHandler_,
                                                                                             packetHandler_,
                                                                                             address,
                                                                                             length);
+
+ std::cout << "************ After to instatiate GroupSyncWrite" << std::endl;
 
   sync_write_handler_cnt_++;
 
@@ -1231,8 +1217,8 @@ bool DynamixelDriver::getSyncReadData(uint8_t index, uint8_t *id, uint8_t id_num
   return true;
 }
 
-bool DynamixelDriver::initBulkWrite(const char **log)
-{
+// bool DynamixelDriver::initBulkWrite(const char **log)
+// {
   // if (portHandler_ == NULL)
   // {
   //   if (log != NULL) *log = "[DynamixelDriver] Failed to load portHandler!";
@@ -1249,11 +1235,11 @@ bool DynamixelDriver::initBulkWrite(const char **log)
   //   return true;
   // }
 
-  return false;
-}
+//   return false;
+// }
 
-bool DynamixelDriver::addBulkWriteParam(uint8_t id, uint16_t address, uint16_t length, int32_t data, const char **log)
-{
+// bool DynamixelDriver::addBulkWriteParam(uint8_t id, uint16_t address, uint16_t length, int32_t data, const char **log)
+// {
   // ErrorFromSDK sdk_error = {0, false, false, 0};
 
   // uint8_t parameter[4] = {0, 0, 0, 0};
@@ -1272,11 +1258,11 @@ bool DynamixelDriver::addBulkWriteParam(uint8_t id, uint16_t address, uint16_t l
   // if (log != NULL) *log = "[DynamixelDriver] Succeeded to add param for bulk write!";
   // return true;
 
-  return false;
-}
+//   return false;
+// }
 
-bool DynamixelDriver::addBulkWriteParam(uint8_t id, const char *item_name, int32_t data, const char **log)
-{
+// bool DynamixelDriver::addBulkWriteParam(uint8_t id, const char *item_name, int32_t data, const char **log)
+// {
   // ErrorFromSDK sdk_error = {0, false, false, 0};
 
   // uint8_t parameter[4] = {0, 0, 0, 0};
@@ -1303,11 +1289,11 @@ bool DynamixelDriver::addBulkWriteParam(uint8_t id, const char *item_name, int32
   // if (log != NULL) *log = "[DynamixelDriver] Succeeded to add param for bulk write!";
   // return true;
 
-  return false;
-}
+//   return false;
+// }
 
-bool DynamixelDriver::bulkWrite(const char **log)
-{
+// bool DynamixelDriver::bulkWrite(const char **log)
+// {
   // ErrorFromSDK sdk_error = {0, false, false, 0};
 
   // sdk_error.dxl_comm_result = groupBulkWrite_->txPacket();
@@ -1322,11 +1308,11 @@ bool DynamixelDriver::bulkWrite(const char **log)
 
   // return true;
 
-  return false;
-}
+//   return false;
+// }
 
-bool DynamixelDriver::initBulkRead(const char **log)
-{
+// bool DynamixelDriver::initBulkRead(const char **log)
+// {
   // if (portHandler_ == NULL)
   // {
   //   if (log != NULL) *log = "[DynamixelDriver] Failed to load portHandler!";
@@ -1344,11 +1330,11 @@ bool DynamixelDriver::initBulkRead(const char **log)
   //   return true;
   // }
 
-  return false;
-}
+//   return false;
+// }
 
-bool DynamixelDriver::addBulkReadParam(uint8_t id, uint16_t address, uint16_t length, const char **log)
-{
+// bool DynamixelDriver::addBulkReadParam(uint8_t id, uint16_t address, uint16_t length, const char **log)
+// {
   // ErrorFromSDK sdk_error = {0, false, false, 0};
 
   // sdk_error.dxl_addparam_result = groupBulkRead_->addParam(id, 
@@ -1376,11 +1362,11 @@ bool DynamixelDriver::addBulkReadParam(uint8_t id, uint16_t address, uint16_t le
   // if (log != NULL) *log = "[DynamixelDriver] Succeeded to add param for bulk read!";
   // return true;
 
-  return false;
-}
+//   return false;
+// }
 
-bool DynamixelDriver::addBulkReadParam(uint8_t id, const char *item_name, const char **log)
-{
+// bool DynamixelDriver::addBulkReadParam(uint8_t id, const char *item_name, const char **log)
+// {
   // ErrorFromSDK sdk_error = {0, false, false, 0};
 
   // const ControlItem *control_item;
@@ -1416,11 +1402,11 @@ bool DynamixelDriver::addBulkReadParam(uint8_t id, const char *item_name, const 
   // if (log != NULL) *log = "[DynamixelDriver] Succeeded to add param for bulk read!";
   // return true;
 
-  return false;
-}
+//   return false;
+// }
 
-bool DynamixelDriver::bulkRead(const char **log)
-{
+// bool DynamixelDriver::bulkRead(const char **log)
+// {
   // ErrorFromSDK sdk_error = {0, false, false, 0};
   
   // sdk_error.dxl_comm_result = groupBulkRead_->txRxPacket();
@@ -1433,11 +1419,11 @@ bool DynamixelDriver::bulkRead(const char **log)
   // if (log != NULL) *log = "[DynamixelDriver] Succeeded to bulk read!";
   // return true;
 
-  return false;
-}
+//   return false;
+// }
 
-bool DynamixelDriver::getBulkReadData(int32_t *data, const char **log)
-{
+// bool DynamixelDriver::getBulkReadData(int32_t *data, const char **log)
+// {
   // ErrorFromSDK sdk_error = {0, false, false, 0};
 
   // for (int i = 0; i < bulk_read_parameter_cnt_; i++)
@@ -1461,11 +1447,11 @@ bool DynamixelDriver::getBulkReadData(int32_t *data, const char **log)
   // if (log != NULL) *log = "[DynamixelDriver] Succeeded to get bulk read data!";
   // return true;
 
-  return false;
-}
+//   return false;
+// }
 
-bool DynamixelDriver::getBulkReadData(uint8_t *id, uint8_t id_num, uint16_t *address, uint16_t *length, int32_t *data, const char **log)
-{
+// bool DynamixelDriver::getBulkReadData(uint8_t *id, uint8_t id_num, uint16_t *address, uint16_t *length, int32_t *data, const char **log)
+// {
   // ErrorFromSDK sdk_error = {0, false, false, 0};
 
   // for (int i = 0; i < id_num; i++)
@@ -1489,15 +1475,15 @@ bool DynamixelDriver::getBulkReadData(uint8_t *id, uint8_t id_num, uint16_t *add
   // if (log != NULL) *log = "[DynamixelDriver] Succeeded to get bulk read data!";
   // return true;
 
-  return false;
-}
+//   return false;
+// }
 
-bool DynamixelDriver::clearBulkReadParam(void)
-{
+// bool DynamixelDriver::clearBulkReadParam(void)
+// {
   // groupBulkRead_->clearParam();
   // bulk_read_parameter_cnt_ = 0;
 
   // return true;
 
-  return false;
-}
+//   return false;
+// }

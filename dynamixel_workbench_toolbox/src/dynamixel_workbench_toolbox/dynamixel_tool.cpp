@@ -115,7 +115,9 @@ static const DynamixelModel dynamixel_model_table[] = {
 
     {RH_P12_RN, "RH-P12-RN"},
 
-    {RH_P12_RN_A, "RH-P12-RN-A"}
+    {RH_P12_RN_A, "RH-P12-RN-A"},
+
+    {MCY_M1, "MCY_M1"}
 };
 #define COUNT_DYNAMIXEL_MODEL  (sizeof(dynamixel_model_table)/sizeof(dynamixel_model_table[0]))
 
