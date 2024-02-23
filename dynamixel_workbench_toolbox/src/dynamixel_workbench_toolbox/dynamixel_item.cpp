@@ -1447,7 +1447,8 @@ static const ControlItem items_MCY[]{
 
     {s_Present_Load, 94, sizeof(s_Present_Load) - 1, 2},
     {s_Present_Voltage, 96, sizeof(s_Present_Voltage) - 1, 1},
-    {s_Present_Temperature, 97, sizeof(s_Present_Temperature) - 1, 1}};
+    {s_Present_Temperature, 97, sizeof(s_Present_Temperature) - 1, 1},
+    {s_Hardware_Error_Status, 107, sizeof(s_Hardware_Error_Status) - 1, 1}};
 
 #define COUNT_MCY_ITEMS (sizeof(items_MCY) / sizeof(items_MCY[0]))
 

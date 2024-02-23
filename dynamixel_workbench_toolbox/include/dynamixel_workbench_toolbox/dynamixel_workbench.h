@@ -27,6 +27,9 @@ class DynamixelWorkbench : public DynamixelDriver
   DynamixelWorkbench();
   ~DynamixelWorkbench();
 
+  bool synchronise_motor(uint8_t id, const char **log = NULL);
+  bool is_motor_synchronised(uint8_t id, const char **log = NULL);
+
   bool torque(uint8_t id, int32_t onoff, const char **log = NULL);
   bool torqueOn(uint8_t id, const char **log = NULL);
   bool torqueOff(uint8_t id, const char **log = NULL);

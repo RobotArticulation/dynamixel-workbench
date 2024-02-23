@@ -113,7 +113,7 @@
 #define RH_P12_RN   35073
 #define RH_P12_RN_A 35074
 
-#define MCY_M1  16641
+#define MCY_M1  0x0101//16642
 
 #define BYTE  1
 #define WORD  2

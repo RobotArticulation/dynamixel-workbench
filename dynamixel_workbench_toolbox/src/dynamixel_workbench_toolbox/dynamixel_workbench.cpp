@@ -37,9 +37,55 @@ DynamixelWorkbench::DynamixelWorkbench(){}
 
 DynamixelWorkbench::~DynamixelWorkbench(){}
 
+
+bool DynamixelWorkbench::synchronise_motor(uint8_t id, const char **log)
+{
+  bool result = false;
+
+  result = itemWrite(id, "Torque_Enable", (int32_t)0x02, log);
+  if (result == false)
+  {
+    if (log != NULL) *log = "[DynamixelWorkbench] Failed to synchronise the motor!";
+  }
+
+  if (log != NULL) *log = "[DynamixelWorkbench] Succeeded to synchronise the motor!";
+
+  return result;
+}
+
+bool DynamixelWorkbench::is_motor_synchronised(uint8_t id, const char **log)
+{
+  int32_t data;
+  bool result = false;
+
+  if (itemRead(id, "Hardware_Error_Status", &data)) 
+  {
+    if ((data & 0x02) == 0) 
+    {
+      result = true;
+    } 
+    else 
+    {
+      result = false;
+    }
+  }
+  else
+  {
+    if (log != NULL) *log = "[DynamixelWorkbench] Failed to read Hardware_Error_Status";
+  }
+
+  return result;
+}
+
 bool DynamixelWorkbench::torque(uint8_t id, int32_t onoff, const char **log)
 {
   bool result = false;
+
+  #if defined(__OPENCR__) || defined(__OPENCM904__)
+    delay(2000);
+  #else
+     usleep(2e06);
+  #endif
 
   result = itemWrite(id, "Torque_Enable", (int32_t)onoff, log);
   if (result == false)
@@ -681,6 +727,17 @@ bool DynamixelWorkbench::setOperatingMode(uint8_t id, uint8_t index, const char 
     {
       if (!strncmp(model_name, "XL-320", strlen("XL-320")))
         result = writeRegister(id, "Control_Mode", JOINT_MODE, log);
+      else if (!strncmp(model_name, "MCY_M1", strlen("MCY_M1")))
+      {
+
+      #if defined(__OPENCR__) || defined(__OPENCM904__)
+          delay(1000);
+      #else
+          usleep(1.2e06);
+      #endif
+
+        result = writeRegister(id, "Operating_Mode", JOINT_MODE, log);
+      }
       else
         result = writeRegister(id, "Operating_Mode", POSITION_CONTROL_MODE, log);
     }
