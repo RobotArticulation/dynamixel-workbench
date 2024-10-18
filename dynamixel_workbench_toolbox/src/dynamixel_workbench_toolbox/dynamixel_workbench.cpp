@@ -17,6 +17,7 @@
 /* Authors: Taehun Lim (Darby), Ryan Shim */
 
 #include "../../include/dynamixel_workbench_toolbox/dynamixel_workbench.h"
+#include <math.h>
 
 static const uint8_t WHEEL_MODE = 1;
 static const uint8_t JOINT_MODE = 2;
@@ -726,7 +727,9 @@ bool DynamixelWorkbench::setOperatingMode(uint8_t id, uint8_t index, const char 
     if (index == POSITION_CONTROL_MODE)
     {
       if (!strncmp(model_name, "XL-320", strlen("XL-320")))
+      {
         result = writeRegister(id, "Control_Mode", JOINT_MODE, log);
+      }
       else if (!strncmp(model_name, "MCY_M1", strlen("MCY_M1")))
       {
 
@@ -1293,6 +1296,7 @@ float DynamixelWorkbench::convertValue2Radian(int32_t value, int32_t max_positio
   return radian;
 }
 
+
 int32_t DynamixelWorkbench::convertVelocity2Value(uint8_t id, float velocity)
 {
   int32_t value = 0;
@@ -1317,6 +1321,7 @@ int32_t DynamixelWorkbench::convertVelocity2Value(uint8_t id, float velocity)
   }
   else if (getProtocolVersion() == 2.0f)
   {
+
     if (strcmp(getModelName(id), "XL-320") == 0)
     {
       if (velocity == 0.0f) value = 0;
@@ -1324,6 +1329,16 @@ int32_t DynamixelWorkbench::convertVelocity2Value(uint8_t id, float velocity)
       else if (velocity > 0.0f) value = (velocity / (model_info->rpm * RPM2RADPERSEC)) + 1023;
 
       return value;
+    }
+    else if (strcmp(getModelName(id), "MCY_M1") == 0)
+    {
+      if (velocity == 0.0f) value = 0;
+      else if (velocity < 0.0f) 
+      {
+        value = fabs(velocity) / model_info->rpm; 
+        value |= 0x00008000;
+      }
+      else if (velocity > 0.0f) value = velocity / model_info->rpm; 
     }
     else
     {

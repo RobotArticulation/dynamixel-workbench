@@ -1452,7 +1452,7 @@ static const ControlItem items_MCY[]{
 
 #define COUNT_MCY_ITEMS (sizeof(items_MCY) / sizeof(items_MCY[0]))
 
-static const ModelInfo info_MCY = {0.3,
+static const ModelInfo info_MCY = {0.001f,
                                   -8192,
                                   0,
                                   8192,
